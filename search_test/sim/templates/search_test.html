@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>People directory</title>
+    <script src="https://unpkg.com/htmx.org@1.9.5" integrity="sha384-xcuj3WpfgjlKF+FXhSQFQ0ZNr39ln+hwjN3npfM9VBnUskLolQAcN80McRIVOPuO" crossorigin="anonymous"></script>
+</head>
+<body id="container">
+
+<h3>
+    <span class="htmx-indicator">
+      ...
+   </span>
+</h3>
+
+<form id="container" tabindex="0" hx-post="/search/results/" hx-trigger="input delay:200ms" hx-target="#suggestion">
+    {% csrf_token %}
+    <div>
+        <div id="display" contenteditable="true"
+             autofocus
+             oninput="syncInput(this.textContent);clearSuggestion();">
+        </div>
+        <div id="suggestion">
+            {% for person in people %}
+            <div id="{{person.name}}" onclick="acceptSuggestion(this.textContent); clearSuggestion(); continueWriting();"></div>
+            <p>{{ person.name }} - {{ person.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <input name="search" type="hidden" id="content" value="">
+</form>
+
+<script>
+    const clearSuggestion = () => {
+        document.getElementById('suggestion').innerHTML = '';
+        toggleSuggestionVisibility();
+    }
+    const acceptSuggestion = (textContent) => {
+        document.getElementById('display').textContent = textContent
+        syncInput(textContent)
+    }
+    const syncInput = (textContent) => {
+        document.getElementById('content').value = textContent
+    }
+
+    const continueWriting = () => {
+        document.getElementById('display').focus()
+        const range = document.createRange()
+        const selection = window.getSelection()
+        range.selectNodeContents(document.getElementById('display'))
+        range.collapse(false)
+        selection.removeAllRanges()
+        selection.addRange(range)
+    }
+
+    const toggleSuggestionVisibility = () => {
+        const suggestionBox = document.getElementById('suggestion');
+        if (suggestionBox.textContent.trim() === '') {
+            suggestionBox.classList.remove('show');
+            suggestionBox.classList.add('hide');
+        } else {
+            suggestionBox.classList.remove('hide');
+            suggestionBox.classList.add('show');
+        }
+    }
+
+    document.getElementById('suggestion').addEventListener('DOMNodeInserted', toggleSuggestionVisibility);
+    document.getElementById('suggestion').addEventListener('DOMNodeRemoved', toggleSuggestionVisibility);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+https://www.photondesigner.com/articles/database-search-django-htmx
+https://www.photondesigner.com/articles/ai-suggest
