@@ -20,7 +20,7 @@
              autofocus
              oninput="syncInput(this.textContent);clearSuggestion();">
         </div>
-        <div id="suggestion" onclick="acceptSuggestion(this.textContent); clearSuggestion(); continueWriting();">
+        <div id="suggestion">
             {% include 'search_results.html' %}
         </div>
     </div>

@@ -1,3 +1,3 @@
 {% for person in people %}
-<p>{{ person.name }} - {{ person.description }}</p>
+<p onclick="acceptSuggestion(this.textContent); clearSuggestion(); continueWriting();">{{ person.name }}</p>
 {% endfor %}
