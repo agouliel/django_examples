@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inline Suggestion</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+
+<div>
+    <form id="container" tabindex="0" hx-trigger="input delay:200ms"
+          hx-post="/suggest"
+          hx-target="#suggestion"
+
+    >
+        <div>
+            <div id="display" contenteditable="true"
+                 autofocus
+                 oninput="syncInput(this.textContent);clearSuggestion();">
+            </div>
+            <div id="suggestion"
+                 onclick="acceptSuggestion(this.textContent); clearSuggestion(); continueWriting();"
+            >
+                {% include 'suggestion.html' %}
+            </div>
+        </div>
+        <input name="text" type="hidden" id="content" value="">
+    </form>
+</div>
+
+<script>
+    const clearSuggestion = () => {
+        document.getElementById('suggestion').innerHTML = '';
+        toggleSuggestionVisibility();
+    }
+    const acceptSuggestion = (textContent) => {
+        document.getElementById('display').textContent += textContent
+        syncInput(textContent)
+    }
+    const syncInput = (textContent) => {
+        document.getElementById('content').value = textContent
+    }
+
+    const continueWriting = () => {
+        document.getElementById('display').focus()
+        const range = document.createRange()
+        const selection = window.getSelection()
+        range.selectNodeContents(document.getElementById('display'))
+        range.collapse(false)
+        selection.removeAllRanges()
+        selection.addRange(range)
+    }
+
+    const toggleSuggestionVisibility = () => {
+        const suggestionBox = document.getElementById('suggestion');
+        if (suggestionBox.textContent.trim() === '') {
+            suggestionBox.classList.remove('show');
+            suggestionBox.classList.add('hide');
+        } else {
+            suggestionBox.classList.remove('hide');
+            suggestionBox.classList.add('show');
+        }
+    }
+
+    document.getElementById('suggestion').addEventListener('DOMNodeInserted', toggleSuggestionVisibility);
+    document.getElementById('suggestion').addEventListener('DOMNodeRemoved', toggleSuggestionVisibility);
+</script>
+
+</body>
+</html>
