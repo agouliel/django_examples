@@ -1,0 +1,286 @@
+https://www.youtube.com/watch?v=4hl8LpDKRMw - Semantic search with Django, PostgreSQL, & pgvector
+from items.models import Item
+Item.objects.filter(content__search='rocks')
+
+
+https://stackoverflow.com/questions/75534231/how-can-i-connect-to-remote-database-using-psycopg3
+https://stackoverflow.com/questions/3582552/what-is-the-format-for-the-postgresql-connection-string-url
+with psycopg.connect("postgresql://alex_user:alex_user@agouliel.ddns.net:5432/alex_db") as conn:
+  with conn.cursor() as cur:
+    cur.execute('')
+
+
+https://stackoverflow.com/questions/39724818/postgres-what-does-double-at-symbol-mean
+The @@ operator in PostgreSQL is related to the full-text search capabilities provided by the tsquery and tsvector types.
+The @@ operator is used to compare a tsquery value (the query) with a tsvector value (the document) to determine if the document
+matches the query. The tsvector type represents a document processed for full-text search, while the tsquery type represents
+a query in a format suitable for searching in tsvector documents.
+
+---------------------------------------------------------------------
+
+https://blog.pamelafox.org/2024/06/pgvector-for-python-developers.html
+
+---------------------------------------------------------------------
+
+PGVECTOR INSTALL
+
+https://github.com/pgvector/pgvector
+
+cd /tmp
+git clone --branch v0.7.2 https://github.com/pgvector/pgvector.git
+cd pgvector
+make
+
+clang -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Werror=vla -Werror=unguarded-availability-new -Wendif-labels -Wmissing-format-attribute -Wcast-function-type -Wformat-security -fno-strict-aliasing -fwrapv -Wno-unused-command-line-argument -Wno-compound-token-split-by-macro -O2 -march=native -ftree-vectorize -fassociative-math -fno-signed-zeros -fno-trapping-math  -I. -I./ -I/usr/local/Homebrew/include/postgresql@14/server -I/usr/local/Homebrew/include/postgresql@14/internal -I/usr/local/homebrew/Cellar/icu4c/73.2/include -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.sdk -I/usr/local/homebrew/opt/openssl@3/include -I/usr/local/homebrew/opt/readline/include -I/usr/local/homebrew/Cellar/lz4/1.9.4/include   -c -o src/bitutils.o src/bitutils.c
+
+clang
+-Wall
+-Wmissing-prototypes
+-Wpointer-arith
+-Wdeclaration-after-statement
+-Werror=vla
+-Werror=unguarded-availability-new
+-Wendif-labels
+-Wmissing-format-attribute
+-Wcast-function-type
+-Wformat-security
+-fno-strict-aliasing
+-fwrapv
+-Wno-unused-command-line-argument
+-Wno-compound-token-split-by-macro
+-O2
+-march=native
+-ftree-vectorize
+-fassociative-math
+-fno-signed-zeros
+-fno-trapping-math
+-I.
+-I./
+-I/usr/local/Homebrew/include/postgresql@14/server
+-I/usr/local/Homebrew/include/postgresql@14/internal
+-I/usr/local/homebrew/Cellar/icu4c/73.2/include
+-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.sdk
+-I/usr/local/homebrew/opt/openssl@3/include
+-I/usr/local/homebrew/opt/readline/include
+-I/usr/local/homebrew/Cellar/lz4/1.9.4/include
+-c
+-o src/bitutils.o src/bitutils.c
+
+ERROR:
+clang: warning: no such sysroot directory: '/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.sdk' [-Wmissing-sysroot]
+In file included from src/bitutils.c:1:
+In file included from /usr/local/Homebrew/include/postgresql@14/server/postgres.h:46:
+/usr/local/Homebrew/include/postgresql@14/server/c.h:59:10: fatal error: 'stdio.h' file not found
+#include <stdio.h>
+         ^~~~~~~~~
+1 error generated.
+make: *** [src/bitutils.o] Error 1
+
+--------------------------------------------------------------
+
+https://stackoverflow.com/questions/51761599/cannot-find-stdio-h
+
+--------------------------------------------------------------
+
+Tried the following:
+
+export SDKROOT=$(xcrun --sdk macosx --show-sdk-path)
+(didn't work)
+
+xcrun --sdk macosx --show-sdk-path
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.0.sdk
+
+cd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs
+MacOSX.sdk	MacOSX14.0.sdk	MacOSX14.sdk
+
+--------------------------------------------------------------
+
+The below looks promising:
+
+pushd /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/
+sudo ln -s MacOSX.sdk MacOSX10.14.sdk
+popd
+
+--------------------------------------------------------------
+
+Add -isysroot to build file
+
+--------------------------------------------------------------
+--------------------------------------------------------------
+--------------------------------------------------------------
+
+https://stackoverflow.com/questions/75664004/install-pgvector-extension-on-mac
+
+brew install pgvector
+
+Updated 4 taps (microsoft/mssql-release, homebrew/services, homebrew/core and homebrew/cask).
+
+==> Deleted Installed Formulae
+python-click ✘                                              python-mutagen ✘                                            python-pluggy ✘
+
+You have 61 outdated formulae installed.
+==> Migrating formula python-certifi to certifi
+==> Unlinking python-certifi
+==> Moving python-certifi versions to /usr/local/homebrew/Cellar/certifi
+==> Relinking certifi
+Warning: certifi is outdated!
+To avoid broken installations, as soon as possible please run:
+  brew upgrade
+Or, if you're OK with a less reliable fix:
+  brew upgrade certifi
+
+==> Fetching dependencies for pgvector: icu4c, ca-certificates, openssl@3, krb5, readline and postgresql@14
+Warning: Building openssl@3 from source as the bottle needs:
+- HOMEBREW_CELLAR: /usr/local/Cellar (yours is /usr/local/homebrew/Cellar)
+- HOMEBREW_PREFIX: /usr/local (yours is /usr/local/homebrew)
+
+Warning: Building postgresql@14 from source as the bottle needs:
+- HOMEBREW_CELLAR: /usr/local/Cellar (yours is /usr/local/homebrew/Cellar)
+- HOMEBREW_PREFIX: /usr/local (yours is /usr/local/homebrew)
+
+==> Installing pgvector dependency: openssl@3
+Warning: Your Xcode (15.0) is outdated.
+Please update to Xcode 15.4 (or delete it).
+Xcode can be updated from the App Store.
+
+==> Installing pgvector dependency: postgresql@14
+Warning: Your Xcode (15.0) is outdated.
+Please update to Xcode 15.4 (or delete it).
+Xcode can be updated from the App Store.
+
+==> ./configure --datadir=/usr/local/homebrew/share/postgresql@14 --libdir=/usr/local/homebrew/lib/postgresql@14 --includedir=/usr/local/homebrew/include/postgresql@14 --enable-t
+==> make
+==> make install-world datadir=/usr/local/homebrew/Cellar/postgresql@14/14.12/share/postgresql@14 libdir=/usr/local/homebrew/Cellar/postgresql@14/14.12/lib/postgresql@14 pkglibdi
+🍺  /usr/local/homebrew/Cellar/postgresql@14/14.12: 3,322 files, 45MB, built in 2 minutes 31 seconds
+
+==> Installing pgvector
+==> Pouring pgvector--0.7.2.sonoma.bottle.tar.gz
+🍺  /usr/local/homebrew/Cellar/pgvector/0.7.2: 43 files, 275.2KB
+==> Running `brew cleanup pgvector`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+
+Warning: The following dependents of upgraded formulae are outdated but will not
+be upgraded because they are not bottled:
+  lima
+  yt-dlp
+  certbot
+  colima
+  python@3.12
+  sqlite-utils
+  meson
+  certifi
+  nginx
+  qemu
+  libssh
+  libevent
+  openssl@1.1
+  python@3.10
+  unbound
+  python@3.11
+  p11-kit
+  msodbcsql17
+  python@3.9
+  gnutls
+  augeas
+  guile
+==> Upgrading 1 dependent of upgraded formulae:
+Disable this behaviour by setting HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+sqlite 3.44.1 -> 3.46.0
+
+==> Checking for dependents of upgraded formulae...
+
+==> Reinstalling 2 dependents with broken linkage from source:
+microsoft/mssql-release/msodbcsql, microsoft/mssql-release/mssql-tools
+==> Fetching microsoft/mssql-release/msodbcsql
+==> Downloading https://download.microsoft.com/download/4/9/5/495639C0-79E4-45A7-B65A-B264071C3D9A/msodbcsql-13.1.9.2.tar.gz
+Already downloaded: /Users/agou/Library/Caches/Homebrew/downloads/8f7c6834a87f6929b76418db93542d73395a5e5b9099c57d13a49e5991a8edab--msodbcsql-13.1.9.2.tar.gz
+==> Reinstalling microsoft/mssql-release/msodbcsql 
+Warning: Your Xcode (15.0) is outdated.
+Please update to Xcode 15.4 (or delete it).
+Xcode can be updated from the App Store.
+
+==> odbcinst -u -d -n "ODBC Driver 13 for SQL Server"
+==> odbcinst -i -d -f ./odbcinst.ini
+==> Caveats
+If you installed this formula with the registration option (default), you'll
+need to manually remove [ODBC Driver 13 for SQL Server] section from
+odbcinst.ini after the formula is uninstalled. This can be done by executing
+the following command:
+    odbcinst -u -d -n "ODBC Driver 13 for SQL Server"
+==> Summary
+🍺  /usr/local/homebrew/Cellar/msodbcsql/13.1.9.2: 11 files, 2.6MB, built in 1 minute 8 seconds
+
+
+==> Fetching dependencies for microsoft/mssql-release/mssql-tools: microsoft/mssql-release/msodbcsql17
+==> Fetching microsoft/mssql-release/msodbcsql17
+
+==> Fetching microsoft/mssql-release/mssql-tools
+
+==> Reinstalling microsoft/mssql-release/mssql-tools 
+Warning: Your Xcode (15.0) is outdated.
+Please update to Xcode 15.4 (or delete it).
+Xcode can be updated from the App Store.
+
+==> Installing dependencies for microsoft/mssql-release/mssql-tools: microsoft/mssql-release/msodbcsql17
+==> Installing microsoft/mssql-release/mssql-tools dependency: microsoft/mssql-release/msodbcsql17
+Warning: Your Xcode (15.0) is outdated.
+Please update to Xcode 15.4 (or delete it).
+Xcode can be updated from the App Store.
+
+==> odbcinst -u -d -n "ODBC Driver 17 for SQL Server"
+==> odbcinst -i -d -f ./odbcinst.ini
+🍺  /usr/local/homebrew/Cellar/msodbcsql17/17.10.6.1: 11 files, 2MB, built in 5 seconds
+
+==> Installing microsoft/mssql-release/mssql-tools
+
+🍺  /usr/local/homebrew/Cellar/mssql-tools/17.10.1.1: 13 files, 889.9KB, built in 5 seconds
+
+==> Autoremoving 12 unneeded formulae:
+brotli
+c-ares
+libuv
+libyaml
+pygments
+python-click
+python-dateutil
+python-pluggy
+python-tabulate
+python-typing-extensions
+pyyaml
+sqlite-utils
+Uninstalling /usr/local/homebrew/Cellar/pygments/2.17.2... (670 files, 8.4MB)
+Uninstalling /usr/local/homebrew/Cellar/libuv/1.44.2... (51 files, 3.5MB)
+Uninstalling /usr/local/homebrew/Cellar/brotli/1.0.9... (25 files, 2.3MB)
+Uninstalling /usr/local/homebrew/Cellar/sqlite-utils/3.35.2... (56 files, 540.5KB)
+Uninstalling /usr/local/homebrew/Cellar/c-ares/1.18.1_1... (87 files, 645.7KB)
+Uninstalling /usr/local/homebrew/Cellar/pyyaml/6.0.1_1... (103 files, 1.7MB)
+Uninstalling /usr/local/homebrew/Cellar/python-typing-extensions/4.8.0_1... (30 files, 502.4KB)
+Uninstalling /usr/local/homebrew/Cellar/python-pluggy/1.3.0... (44 files, 215.5KB)
+Uninstalling /usr/local/homebrew/Cellar/python-click/8.1.7_1... (91 files, 1.4MB)
+Uninstalling /usr/local/homebrew/Cellar/python-dateutil/2.8.2... (74 files, 1.1MB)
+Uninstalling /usr/local/homebrew/Cellar/libyaml/0.2.5... (10 files, 331.2KB)
+Uninstalling /usr/local/homebrew/Cellar/python-tabulate/0.9.0_1... (40 files, 428KB)
+Removing: /Users/agou/Library/Caches/Homebrew/llm--0.12... (3MB)
+Removing: /Users/agou/Library/Caches/Homebrew/portable-ruby-3.1.4.el_capitan.bottle.tar.gz... (12.6MB)
+Removing: /Users/agou/Library/Caches/Homebrew/python-certifi--2023.11.17... (5.4KB)
+Removing: /Users/agou/Library/Caches/Homebrew/python-certifi_bottle_manifest--2023.11.17... (8.8KB)
+Removing: /Users/agou/Library/Caches/Homebrew/python-certifi_bottle_manifest--2023.7.22... (10.8KB)
+Removing: /Users/agou/Library/Caches/Homebrew/llm_bottle_manifest--0.12-1... (26.5KB)
+Removing: /Users/agou/Library/Caches/Homebrew/api-source/Homebrew/homebrew-core/a71177238b924c3ec5396c9b72822424702eeef2/Formula/openssl@3.rb... (5.7KB)
+Removing: /Users/agou/Library/Caches/Homebrew/api-source/Homebrew/homebrew-core/a71177238b924c3ec5396c9b72822424702eeef2/Formula/python@3.12.rb... (23.4KB)
+Removing: /Users/agou/Library/Caches/Homebrew/api-source/Homebrew/homebrew-core/dbf8a88594d03f65370633cfe4fad03af827605d/Formula/openssl@3.rb... (5.9KB)
+Removing: /Users/agou/Library/Caches/Homebrew/api-source/Homebrew/homebrew-core/dbf8a88594d03f65370633cfe4fad03af827605d/Formula/unixodbc.rb... (2KB)
+Removing: /Users/agou/Library/Logs/Homebrew/python@3.12... (17 files, 5.6MB)
+Removing: /Users/agou/Library/Logs/Homebrew/unixodbc... (7 files, 1.8MB)
+Removing: /Users/agou/Library/Logs/Homebrew/ca-certificates... (64B)
+Pruned 0 symbolic links and 4 directories from /usr/local/homebrew
+
+==> Caveats
+==> msodbcsql
+If you installed this formula with the registration option (default), you'll
+need to manually remove [ODBC Driver 13 for SQL Server] section from
+odbcinst.ini after the formula is uninstalled. This can be done by executing
+the following command:
+    odbcinst -u -d -n "ODBC Driver 13 for SQL Server"

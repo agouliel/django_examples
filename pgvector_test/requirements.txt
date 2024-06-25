@@ -1,0 +1,4 @@
+django
+psycopg[binary]
+pgvector
+sentence-transformers
